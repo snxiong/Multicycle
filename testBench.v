@@ -2,44 +2,64 @@
 // CSC142
 // project#2
 `include "multicycle.v"
-//`include "test.v"
+`include "addSub.v"
 
 module testBench();
-	reg clock, reset, start, mode;
-	wire e, s0, s1, s2, done;
 
+	reg [7:0] A, B, C, D;
+	reg start, mode, clock, reset;
+	wire e, s0, s1, s2, done, addOrSub;
 
-	controlUnitFSM control_mod1(start, mode, clock, reset, e, s0, s1, s2, done);
-	//test test_mod(e, s0, s1, s2, done);
+	wire [7:0] addSubInput;
+	//tester testerMod(start, mode, clock, reset, A, B, C, D);	
 
-
-
-/*	
-	initial begin
-		$monitor("========================RESULTS=================\nTime = %g | e = %b | s0 = %b | s1 = %b | s2 = %b | done = %b \n", $time,  e, s0, s1, s2, done);
-		clock = 0;
-		reset = 1;
-		start = 0;
-		mode = 0;
-		#10 reset = 0;
-	end
-*/	
+	controlUnitFSM controlUnit_mod(start, mode, clock ,reset, e, s0, s1, s2, done, addOrSub);		
+	addSub addSub_mod(A, B, C, D, clock, reset, done, s0, s1, s2, addOrSub, addSubInput);
 
 	always@(*)
 	begin
-		$display("=======================RESULTS==================\nTime = %g | e = %b | s0 = %b | s1 = %b | s2 = %b | done = %b \n", $time, e, s0, s1, s2, done);	
+		$display("result = %d", addSubInput);
 	end
-	
-
-	always
+/*	
+	always@(*)
 	begin
+		$display(" %b | %b | %b | %b", s0, s1, s2, addOrSub);
+	end
+*/
+	always begin
 		#5; clock = ~clock;
 	end
 
 	initial begin
-		#10 start = 1; mode = 0; reset = 0;
+		clock = 0;	
+		reset = 0;
+		#10 start = 1; mode = 0; A = 8'h01; B = 8'h02; C = 8'hFF; D = 8'h02;
+		#20 start = 0; mode = 1'bx;
+		$display("=======================");
+		#10 reset = 1;
+		#10 start = 1; mode = 1; reset = 0; A = 8'hFE; B = 8'h01; C = 8'h01; D = 8'h04;
+		#20 start = 0; mode = 1'bx;	
+		$display("=======================");
+		#10 reset = 1;
+		#10 start = 1; mode = 0; reset = 0; A = 8'h01; B = 8'hFF; C = 8'hFF; D = 8'h02;
+		#20 start = 0; mode = 1'bx;
+		$display("=======================");
+		#10 reset = 1;
+		#10 start = 1; mode = 1; reset = 0; A = 8'hFE; B = 8'h02; C = 8'hFF; D = 8'h02;
+		#20 start = 0; mode = 1'bx;		
 		#10 $finish;
 	end
 
-
 endmodule
+/*
+module tester
+(
+	input start, mode, clock, reset,
+	input [7:0] A, B, C, D
+);
+
+	always@(start) begin
+		$display(" %b | %b | %b |, A = %d, B = %d, C = %d, D = %d", start, mode, reset, A, B, C, D);
+	end
+
+endmodule */
