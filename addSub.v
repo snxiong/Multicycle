@@ -13,14 +13,14 @@ module addSub
 	wire signed [7:0] muxData, registerResult, addSubOutput;
 	
 
-	mux2to1 mux2to1_mod(A, addSubOutput, s0, registerResult);		
+	mux2to1 mux2to1_mod(A, addSubOutput, s0, registerResult);// outputs registerResult		
 	mux3to1 mux3to1_mod(B, C, D, s1, s2, muxData);	// outputs muxData
 
 
 	BigAdderMod bigAddSub_mod(muxData, addSubInput, addOrSub, done, s1, s2, addSubOutput);
-
+	// outputs addSubOutput
 	
-	// FLIP FLOP
+	// FLIP FLOP , that will store the sum
 	always@(registerResult)
 	begin
 		if(reset == 1)
@@ -39,7 +39,7 @@ endmodule
 
 module BigAdderMod(muxData, addSubInput, addOrSub, done,s1, s2,  addSubOutput);	
 	input signed [7:0] muxData, addSubInput;
-	input addOrSub, done, clock, s1, s2;
+	input addOrSub, done, s1, s2;
 	output reg signed [7:0] addSubOutput;
 	
 	reg signed [8:0] sumRegister;	
@@ -77,7 +77,8 @@ endmodule
 
 
 /******************************************************************************************/
-
+//				3-to-1 MUX
+/*****************************************************************************************/
 module mux3to1(B, C, D, s1, s2, muxData);	// 8-bit 3-to-1 MUX module that decides to output B, C, or D
 
 	input signed [7:0] B, C, D;
@@ -97,6 +98,9 @@ module mux3to1(B, C, D, s1, s2, muxData);	// 8-bit 3-to-1 MUX module that decide
 
 endmodule
 
+/******************************************************************************************/
+//				2-to-1 MUX
+/*****************************************************************************************/
 
 module mux2to1(A, addSubOutput, s0,registerResult);
 	input signed [7:0] A, addSubOutput;

@@ -13,7 +13,6 @@ module controlUnitFSM
 			Z = 2'b11;
 	
 	reg cycleflag;
-	//reg firstStep;
 
 	reg [1:0] current_state; // current_state will hold a 2-bit value
 	reg [1:0] next_state;	// next_state will also hold a 2-bit value	
@@ -55,7 +54,7 @@ module controlUnitFSM
 	
 	if(done == 0) begin
 			
-		if(mode == 0) begin
+		if(mode == 0) begin // if mode == 0 then, R <- A + B + C - D
 					
 			if(current_state == W && cycleflag == 0) begin 
 				cycleflag = 1; s0 = 0; s1 = 1'bx; s2 = 1'bx; done = 0; addOrSub = 1;end 
@@ -76,7 +75,7 @@ module controlUnitFSM
 		
 		end
 
-		else if(mode == 1) begin
+		else if(mode == 1) begin // if mode == 1 then, R <- A - B + C + D
 			
 			if(current_state == W && cycleflag == 0) begin
 				cycleflag = 1; s0 = 0; s1 = 1'bx; s2 = 1'bx; done = 0; addOrSub = 1; end

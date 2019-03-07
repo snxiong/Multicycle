@@ -11,28 +11,17 @@ module testBench();
 	wire  s0, s1, s2, done, addOrSub;
 
 	wire signed [7:0] addSubInput;
-	//tester testerMod(start, mode, clock, reset, A, B, C, D);	
+	
 
 	controlUnitFSM controlUnit_mod(start, mode, clock ,reset, s0, s1, s2, done, addOrSub);		
 	addSub addSub_mod(A, B, C, D, clock, reset, done, s0, s1, s2, addOrSub, addSubInput);
 
-	initial begin
+	always@(addSubInput) begin
 		
 		$monitor("Result = %d\nDone = %b", addSubInput, done);
 	end	
 
-/*
-	always@(*)
-	begin
-		$display("result = %d", addSubInput);
-	end
-/*
- 	
-	always@(*)
-	begin
-		$display(" %b | %b | %b | %b", s0, s1, s2, addOrSub);
-	end
-*/
+
 	always begin
 		#5; clock = ~clock;
 	end
