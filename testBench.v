@@ -29,7 +29,7 @@ module testBench();
 	initial begin
 		clock = 0;	
 		reset = 0;
-		
+		$display("		Steven Xiong		");
 		// Test Case #1	
 		#10 start = 1; mode = 0; A = 8'h01; B = 8'h02; C = 8'hFF; D = 8'h02;
 		$display("================ A ================");
